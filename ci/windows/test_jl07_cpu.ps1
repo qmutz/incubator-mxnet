@@ -25,6 +25,7 @@ $env:JULIA_DEPOT_PATH=[io.path]::combine($PSScriptRoot, 'julia-depot')
 New-item -ItemType Directory C:\julia07
 
 # Download most recent Julia Windows binary
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 (New-Object System.Net.WebClient).DownloadFile($env:JULIA_URL, "C:\julia07\julia-binary.exe")
 if (! $?) { Throw ("Error on downloading Julia Windows binary") }
 
