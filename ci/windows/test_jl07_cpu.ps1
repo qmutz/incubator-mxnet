@@ -21,6 +21,9 @@ $env:MXNET_HOME=[io.path]::combine($PSScriptRoot, 'mxnet_home')
 $env:JULIA_URL="https://julialang-s3.julialang.org/bin/winnt/x64/0.7/julia-0.7.0-win64.exe"
 $env:JULIA_DEPOT_PATH=[io.path]::combine($PSScriptRoot, 'julia-depot')
 
+# rm -rf
+Remove-item -Recurse -Force -ErrorAction Ignore C:\julia07
+
 # mkdir
 New-item -ItemType Directory C:\julia07
 
@@ -34,9 +37,9 @@ Start-Process -Wait "C:\julia07\julia-binary.exe" -ArgumentList "/S /D=C:\julia0
 if (! $?) { Throw ("Error on installing Julia") }
 
 C:\julia07\julia\bin\julia -e "using InteractiveUtils; versioninfo()"
-C:\julia07\julia\bin\julia -e "using Pkg; Pkg.develop(PackageSpec(name = \"MXNet\", path = \"julia\"))"
+echo 'using Pkg; Pkg.develop(PackageSpec(name = "MXNet", path = "julia"))' | C:\julia07\julia\bin\julia
 if (! $?) { Throw ("Error on installing MXNet") }
-C:\julia07\julia\bin\julia -e "using Pkg; Pkg.build(\"MXNet\"))"
+echo 'using Pkg; Pkg.build("MXNet"))' | C:\julia07\julia\bin\julia
 if (! $?) { Throw ("Error on building MXNet") }
-C:\julia07\julia\bin\julia -e "using Pkg; Pkg.test(\"MXNet\"))"
+echo 'using Pkg; Pkg.test("MXNet"))' | C:\julia07\julia\bin\julia
 if (! $?) { Throw ("Error on testing") }
