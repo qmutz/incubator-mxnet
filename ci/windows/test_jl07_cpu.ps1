@@ -21,25 +21,22 @@ $env:MXNET_HOME=[io.path]::combine($PSScriptRoot, 'mxnet_home')
 $env:JULIA_URL="https://julialang-s3.julialang.org/bin/winnt/x64/0.7/julia-0.7.0-win64.exe"
 $env:JULIA_DEPOT_PATH=[io.path]::combine($PSScriptRoot, 'julia-depot')
 
-# rm -rf
-Remove-item -Recurse -Force -ErrorAction Ignore C:\julia07
-
-# mkdir
-New-item -ItemType Directory C:\julia07
+$JULIA_DIR = [System.IO.Path]::GetFullPath(".\julia07")
+$JULIA = "$JULIA_DIR\bin\julia"
 
 # Download most recent Julia Windows binary
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-(New-Object System.Net.WebClient).DownloadFile($env:JULIA_URL, "C:\julia07\julia-binary.exe")
+(New-Object System.Net.WebClient).DownloadFile($env:JULIA_URL, "julia-binary.exe")
 if (! $?) { Throw ("Error on downloading Julia Windows binary") }
 
 # Run installer silently, output to C:\julia07\julia
-Start-Process -Wait "C:\julia07\julia-binary.exe" -ArgumentList "/S /D=C:\julia07\julia"
+Start-Process -Wait "$JULIA_DIR\julia-binary.exe" -ArgumentList "/S /D=$JULIA_DIR"
 if (! $?) { Throw ("Error on installing Julia") }
 
 C:\julia07\julia\bin\julia -e "using InteractiveUtils; versioninfo()"
-echo 'using Pkg; Pkg.develop(PackageSpec(name = "MXNet", path = "julia"))' | C:\julia07\julia\bin\julia
+echo 'using Pkg; Pkg.develop(PackageSpec(name = "MXNet", path = "julia"))' | $JULIA
 if (! $?) { Throw ("Error on installing MXNet") }
-echo 'using Pkg; Pkg.build("MXNet"))' | C:\julia07\julia\bin\julia
+echo 'using Pkg; Pkg.build("MXNet")' | $JULIA
 if (! $?) { Throw ("Error on building MXNet") }
-echo 'using Pkg; Pkg.test("MXNet"))' | C:\julia07\julia\bin\julia
+echo 'using Pkg; Pkg.test("MXNet")' | $JULIA
 if (! $?) { Throw ("Error on testing") }
