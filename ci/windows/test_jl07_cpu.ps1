@@ -30,7 +30,7 @@ New-item -ItemType Directory C:\julia07
 if (! $?) { Throw ("Error on downloading Julia Windows binary") }
 
 # Run installer silently, output to C:\julia07\julia
-C:\julia07\julia-binary.exe /S /D=C:\julia07\julia
+Start-Process -Wait "C:\julia07\julia-binary.exe" -ArgumentList "/S /D=C:\julia07\julia"
 if (! $?) { Throw ("Error on installing Julia") }
 
 C:\julia07\julia\bin\julia -e "using InteractiveUtils; versioninfo()"
