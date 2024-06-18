@@ -1,2 +1,3 @@
 librosa>=0.6.2 # librosa is a library that is used to load the audio(wav) files and provides capabilities of feature extraction.
 argparse # used for parsing arguments
+urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
