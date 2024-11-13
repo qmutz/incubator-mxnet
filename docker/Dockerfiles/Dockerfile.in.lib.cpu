@@ -1,6 +1,6 @@
 # -*- mode: dockerfile -*-
 # dockerfile to build libmxnet.so on CPU
-FROM ubuntu:14.04
+FROM ubuntu:trusty-20190425
 
 COPY install/cpp.sh install/
 RUN install/cpp.sh
